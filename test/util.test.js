@@ -1,7 +1,7 @@
 'use strict';
 
-var assert = require('chai').assert;
-var util = require('../src/util');
+let assert = require('chai').assert;
+let util = require('../src/util');
 
 describe('util', function() {
 
@@ -11,7 +11,7 @@ describe('util', function() {
     });
 
     it('isBuffer should recognize Buffers', function() {
-      var b = new Buffer("[{'a':1, 'b':2}]");
+      let b = new Buffer("[{'a':1, 'b':2}]");
       assert.isTrue(util.isBuffer(b));
       assert.isFalse(util.isBuffer(null));
       assert.isFalse(util.isBuffer(0));
@@ -86,28 +86,28 @@ describe('util', function() {
     });
 
     it('should handle single argument without prefix', function() {
-      var comparator = util.comparator(['p']);
+      let comparator = util.comparator(['p']);
       assert.equal(comparator({'p': 1}, {'p': 0}), 1);
       assert.equal(comparator({'p': 0}, {'p': 1}), -1);
       assert.equal(comparator({'p': 1}, {'p': 1}), 0);
     });
 
     it('should handle single argument with "+" prefix', function() {
-      var comparator = util.comparator(['+p']);
+      let comparator = util.comparator(['+p']);
       assert.equal(comparator({'p': 1}, {'p': 0}), 1);
       assert.equal(comparator({'p': 0}, {'p': 1}), -1);
       assert.equal(comparator({'p': 1}, {'p': 1}), 0);
     });
 
     it('should handle single argument with "-" prefix', function() {
-      var comparator = util.comparator(['-p']);
+      let comparator = util.comparator(['-p']);
       assert.equal(comparator({'p': 1}, {'p': 0}), -1);
       assert.equal(comparator({'p': 0}, {'p': 1}), 1);
       assert.equal(comparator({'p': 1}, {'p': 1}), 0);
     });
 
     it('should handle two arguments without prefix', function() {
-      var comparator = util.comparator(['p', 'q']);
+      let comparator = util.comparator(['p', 'q']);
       assert.equal(comparator({'p': 1}, {'p': 0}), 1);
       assert.equal(comparator({'p': 0}, {'p': 1}), -1);
       assert.equal(comparator({'p': 1, 'q': 2}, {'p': 1, 'q': -2}), 1);
@@ -118,7 +118,7 @@ describe('util', function() {
 
   describe('stable sort', function() {
     it('should compute a stable sort', function() {
-      var data = [
+      let data = [
         {id: 1, a: 2},
         {id: 2, a: 5},
         {id: 3, a: 1},
@@ -212,7 +212,7 @@ describe('util', function() {
     });
 
     it('should return an unmodified array argument', function() {
-      var value = [1, 2, 3];
+      let value = [1, 2, 3];
       assert.strictEqual(util.array(value), value);
     });
 
@@ -223,7 +223,7 @@ describe('util', function() {
 
   describe('identity', function() {
     it('should return input value', function() {
-      var x = {};
+      let x = {};
       assert.strictEqual(x, util.identity(x));
       assert.strictEqual(null, util.identity(null));
     });
@@ -286,19 +286,19 @@ describe('util', function() {
     });
 
     it('should stringify objects', function() {
-      var x = {a: {b: {c: 1}}};
+      let x = {a: {b: {c: 1}}};
       assert.equal(JSON.stringify(x), util.str(x));
     });
 
     it('should handle quotes in strings', function() {
-      var tests = ["'hello'", '"hello"', ];
+      let tests = ["'hello'", '"hello"', ];
       tests.forEach(function(s) {
         assert.equal(s, (1,eval)(util.str(s)));
       });
     });
 
     it('should handle special characters in strings', function() {
-      var tests = ["\ntest", // newline
+      let tests = ["\ntest", // newline
         '\u0000',
         '\u2028', // line separator
         '\u2029' // paragraph separator
@@ -349,7 +349,7 @@ describe('util', function() {
 
   describe('toMap', function() {
     it('should return a boolean map of array values', function() {
-      var m = util.toMap([1,3,5]);
+      let m = util.toMap([1,3,5]);
       assert.deepEqual({'1':1, '3':1, '5':1}, m);
     });
   });
@@ -390,7 +390,7 @@ describe('util', function() {
     });
 
     it('should return function argument', function() {
-      var f = function() {};
+      let f = function() {};
       assert.strictEqual(util.accessor(f), f);
     });
 
@@ -440,19 +440,19 @@ describe('util', function() {
 
   describe('mutator', function() {
     it('should handle property of simple String argument', function() {
-      var o = {a: 1};
+      let o = {a: 1};
       util.mutator('a')(o, 2);
       assert.equal(2, o.a);
     });
 
     it('should resolve property paths for String arguments with "."', function() {
-      var o = {'a.b': {'c': {'d': 'value'}}};
+      let o = {'a.b': {'c': {'d': 'value'}}};
       util.mutator('["a.b"].c.d')(o, 'hello');
       assert.equal(o['a.b'].c.d, 'hello');
     });
 
     it('should handle property for number arguments', function() {
-      var o = [1,2,3];
+      let o = [1,2,3];
       util.mutator(0)(o, 2);
       util.mutator(1)(o, 3);
       util.mutator(2)(o, 1);
@@ -461,14 +461,14 @@ describe('util', function() {
   });
 
   describe('extend', function() {
-    var topic = (function() {
+    let topic = (function() {
       function createChild(o) {
-        var F = function () {
+        let F = function () {
         };
         F.prototype = o;
         return new F();
       }
-      var grandParent = { 'p2_1': 'vp2_1', 'p2_2': 'vp2_2' },
+      let grandParent = { 'p2_1': 'vp2_1', 'p2_2': 'vp2_2' },
         parent = createChild(grandParent),
         object1 = createChild(parent),
         object2 = { 'o2_1': 'vo2_1', 'override_1': 'overridden' };
@@ -503,18 +503,18 @@ describe('util', function() {
 
   describe('duplicate', function() {
     it('should perform a deep clone of the argument', function() {
-      var original = {
+      let original = {
         'number': -3.452,
         'string': 'text',
         'boolean': true,
         'array': [ 'arrayvalue' ],
         'child': { 'value': 'original value' }
       };
-      var topic = {
+      let topic = {
         'original': original,
         'clone': util.duplicate(original)
       };
-      var clone = topic.clone;
+      let clone = topic.clone;
 
       assert.strictEqual(clone.child.value, 'original value');
       assert.strictEqual(clone.number, -3.452);
@@ -531,13 +531,13 @@ describe('util', function() {
     });
 
     it('duplicating functions should throw error', function() {
-      var f = function() { util.duplicate(function() {}); };
+      let f = function() { util.duplicate(function() {}); };
       assert.throws(f);
     });
 
     it('duplicating objects with circular dependencies should throw error', function() {
-      var f = function() {
-        var o1 = {}, o2 = { 'o1': o1 };
+      let f = function() {
+        let o1 = {}, o2 = { 'o1': o1 };
         o1['o2'] = o2;
         util.duplicate(o1);
       };
@@ -585,7 +585,7 @@ describe('util', function() {
   });
 
   describe('permute', function() {
-    var a = [1,2,3,4],
+    let a = [1,2,3,4],
         b = [1],
         c = [];
 
